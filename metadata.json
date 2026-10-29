@@ -1,0 +1,6 @@
+{
+  "name": "智能呼入工作台",
+  "description": "专业级AI赋能的呼叫中心工作台，具备实时转写和智能建议功能。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
