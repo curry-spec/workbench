@@ -769,11 +769,208 @@ const PrepaymentPage = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
+const StatementDatePage = ({ onBack }: { onBack: () => void }) => {
+  const [isSearched, setIsSearched] = useState(false);
+  const [isAccountSearched, setIsAccountSearched] = useState(false);
+  const [statementDay, setStatementDay] = useState<'5' | '15'>('5');
+  const [newStatementDay, setNewStatementDay] = useState<string>('');
+
+  const handleTransactionSearch = () => {
+    setIsSearched(true);
+  };
+
+  const handleAccountSearch = () => {
+    setIsAccountSearched(true);
+  };
+
+  const handleSubmit = () => {
+    alert('账单日修改提交成功');
+  };
+
+  return (
+    <div className="flex-1 flex flex-col min-h-0 bg-white">
+      <div className="flex items-center bg-white border-b border-slate-200">
+        <button 
+          onClick={onBack}
+          className="px-6 py-3 text-xs font-medium text-blue-600 flex items-center gap-2 border-r border-slate-100 hover:bg-slate-50 transition-colors"
+        >
+          <LayoutDashboard className="w-4 h-4" /> 交易首页
+        </button>
+        <div className="px-6 py-3 text-xs font-medium text-slate-800 bg-slate-50 flex items-center gap-4 border-r border-slate-100">
+          信用卡账单日查询/修改 <span className="text-slate-300 hover:text-slate-500 cursor-pointer text-sm">×</span>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6">
+        <div className="px-4 py-2 flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <motion.div
+                animate={{ y: [0, -2, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Cpu className="w-6 h-6 text-blue-600" />
+              </motion.div>
+            </div>
+            <span className="text-lg font-bold text-blue-800 tracking-tight">小雅推荐</span>
+          </div>
+          <div className="flex items-center gap-0.5">
+            <span className="px-3 py-1 bg-blue-600 text-white text-[10px] rounded-l-full font-bold">推荐菜单</span>
+            <span className="px-4 py-1 bg-blue-50 text-blue-700 text-[10px] rounded-r-full border border-blue-100 font-medium">信用卡账单日查询/修改</span>
+          </div>
+        </div>
+
+        <section className="bg-slate-50 p-8 rounded border border-slate-200 shadow-sm">
+          <div className="text-sm font-bold text-slate-700 mb-6">信用卡账单日查询/修改</div>
+          <div className="flex items-center justify-start gap-4 flex-wrap">
+            <span className="text-sm text-slate-600">卡号：</span>
+            <input 
+              type="text" 
+              defaultValue="6227612145830440135" 
+              className="w-80 h-10 px-4 bg-white border border-slate-200 rounded outline-none focus:ring-1 focus:ring-blue-500 text-sm tabular-nums text-slate-500"
+            />
+            <button 
+              onClick={handleAccountSearch}
+              className="px-6 h-10 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors ml-4"
+            >
+              账户查询
+            </button>
+            <button 
+              onClick={handleTransactionSearch}
+              className="px-6 h-10 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+            >
+              交易查询
+            </button>
+          </div>
+        </section>
+
+        <section className="space-y-6 bg-white p-6 rounded border border-slate-200 shadow-sm">
+          {/* 账户信息 Section */}
+          <div className="space-y-4 pb-4 border-b border-slate-100">
+            <div className="text-sm font-bold text-slate-800">账户信息：</div>
+            <div className="grid grid-cols-3 gap-6 text-xs text-slate-800 font-medium">
+              <div className="flex items-center gap-2">
+                <span className="shrink-0 text-slate-600">账户类型：</span>
+                <input 
+                  type="text" 
+                  value={isAccountSearched ? '个人消费账户' : ''} 
+                  readOnly 
+                  className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="shrink-0 text-slate-600">卡类型：</span>
+                <input 
+                  type="text" 
+                  value={isAccountSearched ? '非公务卡' : ''} 
+                  readOnly 
+                  className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="shrink-0 text-slate-600">账户状态是否正常：</span>
+                <input 
+                  type="text" 
+                  value={isAccountSearched ? '是' : ''} 
+                  readOnly 
+                  className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="text-sm font-bold text-slate-800 pb-2">
+            账单日修改
+          </div>
+
+          <div className="grid grid-cols-3 gap-6 pt-2 text-xs text-slate-800 font-medium items-center">
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">原账单日：</span>
+              <input 
+                type="text" 
+                value={isSearched ? '10' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">新账单日：</span>
+              <select 
+                value={newStatementDay}
+                onChange={(e) => setNewStatementDay(e.target.value)}
+                className="flex-1 h-8 px-2 bg-white border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500 text-slate-700"
+              >
+                <option value="" disabled>请选择</option>
+                <option value="1">1</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">自然年1年内是否修改过账单日：</span>
+              <input 
+                type="text" 
+                value={isSearched ? '否' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">是否出过账单：</span>
+              <input 
+                type="text" 
+                value={isSearched ? '是' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">是否存在分期：</span>
+              <input 
+                type="text" 
+                value={isSearched ? '否' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">上次账单日更改日期：</span>
+              <input 
+                type="text" 
+                value={isSearched ? '2024-06-24' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">预计账单日生效日期：</span>
+              <input 
+                type="text" 
+                value={isSearched && newStatementDay ? `2026-12-${newStatementDay.padStart(2, '0')}` : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleSubmit}
+                className="px-6 h-8 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors shadow-sm"
+              >
+                提交修改
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
 // --- 主应用 ---
 
 export default function App() {
   const [activeSubTab, setActiveSubTab] = useState('客户画像');
-  const [currentView, setCurrentView] = useState<'dashboard' | 'installments' | 'prepayment'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'installments' | 'prepayment' | 'statementDate'>('dashboard');
 
   return (
     <div className="flex h-screen bg-[#f0f2f5] font-plus-jakarta text-slate-900 overflow-hidden">
@@ -818,6 +1015,16 @@ export default function App() {
                 }`}
               >
                 分期付款提前还款
+              </button>
+              <button 
+                onClick={() => setCurrentView('statementDate')}
+                className={`px-3 py-1 text-xs rounded transition-all ${
+                  currentView === 'statementDate' 
+                    ? 'bg-blue-600 text-white shadow-sm' 
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                信用卡账单日查询/修改
               </button>
             </div>
             <div className="flex items-center gap-2">
@@ -1009,6 +1216,17 @@ export default function App() {
                 className="flex-1 min-h-0"
               >
                 <PrepaymentPage onBack={() => setCurrentView('dashboard')} />
+              </motion.div>
+            )}
+            {currentView === 'statementDate' && (
+              <motion.div 
+                key="statementDate"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="flex-1 min-h-0"
+              >
+                <StatementDatePage onBack={() => setCurrentView('dashboard')} />
               </motion.div>
             )}
           </AnimatePresence>
