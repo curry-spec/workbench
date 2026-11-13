@@ -966,11 +966,318 @@ const StatementDatePage = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
+const AnnualFeePage = ({ onBack }: { onBack: () => void }) => {
+  const [isSearched, setIsSearched] = useState(false);
+  const [statementMonth, setStatementMonth] = useState('');
+  const [renewalData, setRenewalData] = useState<{ current: string; required: string; missing: string; exceedsSixMonths: string; latestMakeUpDate: string } | null>(null);
+  const [pointsData, setPointsData] = useState<{ balance: string; needed: string; isGreaterThan: string } | null>(null);
+
+  const handleSearch = () => {
+    setIsSearched(true);
+  };
+
+  const handleApplyRenewal = () => {
+    if (!statementMonth) {
+      alert('请先选择年费所在账单月');
+      return;
+    }
+    const baseDate = new Date(`${statementMonth}-15`);
+    baseDate.setDate(baseDate.getDate() + 29);
+    const y = baseDate.getFullYear();
+    const m = String(baseDate.getMonth() + 1).padStart(2, '0');
+    const d = String(baseDate.getDate()).padStart(2, '0');
+    const latestDate = `${y}-${m}-${d}`;
+
+    setRenewalData({
+      current: '4',
+      required: '6',
+      missing: '2',
+      exceedsSixMonths: '否',
+      latestMakeUpDate: latestDate
+    });
+  };
+
+  const handleApplyPoints = () => {
+    if (!statementMonth) {
+      alert('请先选择年费所在账单月');
+      return;
+    }
+    setPointsData({
+      balance: '15,000',
+      needed: '10,000',
+      isGreaterThan: '是'
+    });
+  };
+
+  const hasData = isSearched || statementMonth !== '';
+
+  return (
+    <div className="flex-1 flex flex-col min-h-0 bg-white">
+      <div className="flex items-center bg-white border-b border-slate-200">
+        <button 
+          onClick={onBack}
+          className="px-6 py-3 text-xs font-medium text-blue-600 flex items-center gap-2 border-r border-slate-100 hover:bg-slate-50 transition-colors"
+        >
+          <LayoutDashboard className="w-4 h-4" /> 交易首页
+        </button>
+        <div className="px-6 py-3 text-xs font-medium text-slate-800 bg-slate-50 flex items-center gap-4 border-r border-slate-100">
+          信用卡年费查询/减免 <span className="text-slate-300 hover:text-slate-500 cursor-pointer text-sm">×</span>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6">
+        <div className="px-4 py-2 flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <motion.div
+                animate={{ y: [0, -2, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Cpu className="w-6 h-6 text-blue-600" />
+              </motion.div>
+            </div>
+            <span className="text-lg font-bold text-blue-800 tracking-tight">小雅推荐</span>
+          </div>
+          <div className="flex items-center gap-0.5">
+            <span className="px-3 py-1 bg-blue-600 text-white text-[10px] rounded-l-full font-bold">推荐菜单</span>
+            <span className="px-4 py-1 bg-blue-50 text-blue-700 text-[10px] rounded-r-full border border-blue-100 font-medium">信用卡年费查询/减免</span>
+          </div>
+        </div>
+
+        <section className="bg-slate-50 p-8 rounded border border-slate-200 shadow-sm">
+          <div className="text-sm font-bold text-slate-700 mb-6">信用卡年费查询/减免</div>
+          <div className="flex items-center justify-start gap-4 flex-wrap">
+            <span className="text-sm text-slate-600">卡号：</span>
+            <input 
+              type="text" 
+              defaultValue="6258216130065095" 
+              className="w-80 h-10 px-4 bg-white border border-slate-200 rounded outline-none focus:ring-1 focus:ring-blue-500 text-sm tabular-nums text-slate-700"
+            />
+            <button 
+              onClick={handleSearch}
+              className="px-8 h-10 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors ml-4"
+            >
+              查询
+            </button>
+          </div>
+        </section>
+
+        <section className="space-y-6 bg-white p-6 rounded border border-slate-200 shadow-sm">
+          <div className="text-sm font-bold text-slate-800">卡片年费信息</div>
+
+          <div className="grid grid-cols-3 gap-6 pt-2 text-xs text-slate-800 font-medium">
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">姓名：</span>
+              <input 
+                type="text" 
+                value={hasData ? '魏想' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">卡号：</span>
+              <input 
+                type="text" 
+                value={hasData ? '6258216130065095' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">卡片卡种：</span>
+              <input 
+                type="text" 
+                value={hasData ? '浙商银行折银善家信用卡' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">主副卡标志：</span>
+              <input 
+                type="text" 
+                value={hasData ? '主卡' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">是否在续卡激活期内被收取年费：</span>
+              <input 
+                type="text" 
+                value={hasData ? '否' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">手动选年费所在账单月：</span>
+              <select 
+                value={statementMonth}
+                onChange={(e) => setStatementMonth(e.target.value)}
+                className="flex-1 h-8 px-2 bg-white border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500 text-slate-700"
+              >
+                <option value="" disabled>请选择</option>
+                <option value="2026-11">2026-11</option>
+                <option value="2026-12">2026-12</option>
+                <option value="2027-01">2027-01</option>
+                <option value="2027-02">2027-02</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">年费产生金额：</span>
+              <input 
+                type="text" 
+                value={statementMonth ? '300.00' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">年费收取标准：</span>
+              <input 
+                type="text" 
+                value={statementMonth ? '300.00' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">年费产生时间：</span>
+              <input 
+                type="text" 
+                value={statementMonth ? `${statementMonth}-15` : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">年费减免标准：</span>
+              <input 
+                type="text" 
+                value={statementMonth ? '刷卡满6次减免年费' : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700" 
+              />
+            </div>
+          </div>
+          <div className="text-[11px] text-red-500 italic mt-1">
+            (该栏目如果为空，可通过上方手动选择年费所在账单月)
+          </div>
+        </section>
+
+        <section className="space-y-6 bg-white p-6 rounded border border-slate-200 shadow-sm">
+          <div className="text-sm font-bold text-slate-800">年费减免申请类型</div>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleApplyRenewal}
+              className="px-6 h-10 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              年费补刷减免申请
+            </button>
+            <button 
+              onClick={handleApplyPoints}
+              className="px-6 h-10 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              积分抵扣年费申请
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-6 pt-2 text-xs text-slate-800 font-medium items-center">
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">当前刷卡次数：</span>
+              <input 
+                type="text" 
+                value={renewalData ? renewalData.current : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">减免要求次数：</span>
+              <input 
+                type="text" 
+                value={renewalData ? renewalData.required : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">客户需要补交易次数：</span>
+              <input 
+                type="text" 
+                value={renewalData ? renewalData.missing : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 font-bold text-blue-600 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">年费产生时间距来电是否超6个月：</span>
+              <input 
+                type="text" 
+                value={renewalData ? renewalData.exceedsSixMonths : ''} 
+                readOnly 
+                className="flex-1 h-8 px-2 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 text-center" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">预约最晚补刷时间：</span>
+              <input 
+                type="text" 
+                value={renewalData ? renewalData.latestMakeUpDate : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div />
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">积分余额：</span>
+              <input 
+                type="text" 
+                value={pointsData ? pointsData.balance : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">抵扣年费所需积分：</span>
+              <input 
+                type="text" 
+                value={pointsData ? pointsData.needed : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 tabular-nums" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-slate-600">积分余额是否大于抵扣年费所需积分：</span>
+              <input 
+                type="text" 
+                value={pointsData ? pointsData.isGreaterThan : ''} 
+                readOnly 
+                className="flex-1 h-8 px-3 bg-white border border-slate-200 rounded text-xs outline-none text-slate-700 font-bold text-blue-600" 
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => alert('已选择使用积分抵扣年费')}
+                className="px-6 h-8 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors shadow-sm whitespace-nowrap"
+              >
+                使用积分抵扣年费
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
 // --- 主应用 ---
 
 export default function App() {
   const [activeSubTab, setActiveSubTab] = useState('客户画像');
-  const [currentView, setCurrentView] = useState<'dashboard' | 'installments' | 'prepayment' | 'statementDate'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'installments' | 'prepayment' | 'statementDate' | 'annualFee'>('dashboard');
 
   return (
     <div className="flex h-screen bg-[#f0f2f5] font-plus-jakarta text-slate-900 overflow-hidden">
@@ -1025,6 +1332,16 @@ export default function App() {
                 }`}
               >
                 信用卡账单日查询/修改
+              </button>
+              <button 
+                onClick={() => setCurrentView('annualFee')}
+                className={`px-3 py-1 text-xs rounded transition-all ${
+                  currentView === 'annualFee' 
+                    ? 'bg-blue-600 text-white shadow-sm' 
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                信用卡年费查询/减免
               </button>
             </div>
             <div className="flex items-center gap-2">
@@ -1227,6 +1544,17 @@ export default function App() {
                 className="flex-1 min-h-0"
               >
                 <StatementDatePage onBack={() => setCurrentView('dashboard')} />
+              </motion.div>
+            )}
+            {currentView === 'annualFee' && (
+              <motion.div 
+                key="annualFee"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="flex-1 min-h-0"
+              >
+                <AnnualFeePage onBack={() => setCurrentView('dashboard')} />
               </motion.div>
             )}
           </AnimatePresence>
